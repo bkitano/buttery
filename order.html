@@ -4,23 +4,52 @@
         <title>
             Buttery Order
         </title>
+    </head>
+    <body>
+        <div class='container' id='order-list'>
+            <h1>Orders</h1>
+            <ul id="orders" class='list-group'>
+            </ul>
+        </div>
+        
+        <div class='container'>
+            <h1>Submit an Order</h1>
+            <form class='form'>
+                <div class='form-group' id="order-form">
+                        <label for="name">Your Name</label>
+                        <input class='form-control' type="text" id="name">
+                        </br>
+                        <label for="name">Order</label>
+                        <input class='form-control' type="text" id="order">
+                        </br>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
         <script src="/socket.io/socket.io.js"></script>
-        
         <script id="socket commands">
         var socket = io.connect('http://buttery-1-bkitano.c9users.io');
         
         socket.on('connect', function(data) {
-                socket.emit('join', 'Hello World from client');
+                socket.emit('join', 'Hello World from buttery client');
             });
+            
+        // when someone submits an order
+        $('form').submit( function(e) {
+            e.preventDefault();
+            var order = $('#order').val();
+            socket.emit('order-from-client', order);
+            console.log(order);
+        });
+        
+        // when the server recieves an order, display it on the page
+        socket.on('order-to-client', function(data) {
+            $('#orders').append('<li class="list-group-item">' + data + "</li>");
+        });
         </script>
-    </head>
-    <body>
-        <div id="orders">
-            <h1 class='jumbotron'>Zach Page</h1>
-        </div>
     </body>
 </html>

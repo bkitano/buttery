@@ -30,4 +30,14 @@ io.on('connection', function(client) {
         client.emit('messages', 'Hello from server');
     });
     
+    client.on('order-from-client', function(data) {
+        console.log(data);
+       io.sockets.emit('order-to-client', data); 
+    });
+    
 });
+
+// ------ NOTES ------
+/*
+- script tags go in the body tags
+*/
