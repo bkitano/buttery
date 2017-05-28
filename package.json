@@ -19,6 +19,7 @@
   "homepage": "https://github.com/bkitano/buttery#readme",
   "dependencies": {
     "express": "^4.15.3",
+    "express-handlebars": "^3.0.0",
     "http": "0.0.0",
     "nodemon": "^1.11.0",
     "socket.io": "^2.0.1"

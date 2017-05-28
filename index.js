@@ -12,10 +12,22 @@ app.use(express.static(__dirname + '/node_modules'));
 // ------ SITES -----------
 
 app.get('/', function(req, res) {
-    res.send('Hello, world');
+        res.sendFile(__dirname + '/order.html');
 });
 
 // ------ FOOTERS ---------
 server.listen(process.env.PORT || port, function() {
     console.log('listening on port ' + port + '...');
+});
+
+
+// ------ socket functions ------
+io.on('connection', function(client) {
+    console.log('client connected');
+    
+    client.on('join', function(data) {
+        console.log(data);
+        client.emit('messages', 'Hello from server');
+    });
+    
 });
