@@ -6,10 +6,20 @@
         </title>
     </head>
     <body>
-        <div class='container' id='order-list'>
+        <div class='container'>
             <h1>Orders</h1>
-            <ul id="orders" class='list-group'>
-            </ul>
+            <table id='orders' class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody id="order-list">
+
+              </tbody>
+            </table>
         </div>
         
         <div class='container'>
@@ -41,14 +51,15 @@
         // when someone submits an order
         $('form').submit( function(e) {
             e.preventDefault();
+            var name = $('#name').val();
             var order = $('#order').val();
-            socket.emit('order-from-client', order);
-            console.log(order);
+            socket.emit('order-from-client', {'name':name, 'order':order});
         });
         
         // when the server recieves an order, display it on the page
         socket.on('order-to-client', function(data) {
-            $('#orders').append('<li class="list-group-item">' + data + "</li>");
+            var order = "<tr> <th scope='row'>"+ data.number +"</th> <td>" + data.name + "</td> <td>"+data.order+"</td></tr>";
+            $('#order-list').append(order);
         });
         </script>
     </body>

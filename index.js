@@ -5,6 +5,8 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 var port = 8080;
+var count = 0;
+
 
 // ------ MIDDLEWARE ------
 app.use(express.static(__dirname + '/node_modules'));  
@@ -31,8 +33,13 @@ io.on('connection', function(client) {
     });
     
     client.on('order-from-client', function(data) {
-        console.log(data);
-       io.sockets.emit('order-to-client', data); 
+        count++;
+        var order = {
+            'number' : count,
+            'name' : data.name,
+            'order' : data.order
+        };
+       io.sockets.emit('order-to-client', order); 
     });
     
 });
