@@ -1,0 +1,26 @@
+{
+  "name": "buttery-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkitano/buttery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bkitano/buttery/issues"
+  },
+  "homepage": "https://github.com/bkitano/buttery#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "http": "0.0.0",
+    "nodemon": "^1.11.0",
+    "socket.io": "^2.0.1"
+  }
+}
