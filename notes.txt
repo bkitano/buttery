@@ -31,3 +31,6 @@ nice
 6/18/17 - todo's
 1. need to order the numbers correctly
 2. need to be able to complete orders
+- the animation for that is done, and it's mobily responsive!
+
+
