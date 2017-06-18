@@ -14,13 +14,13 @@
                         <tr>
                             <td>{{this.name}}</td>
                             <td>{{this.order}}</td>
-                        </tr>                      
+                        </tr>
                       {{/each}}
                   {{/if}}
               </tbody>
             </table>
         </div>
-        
+
         <div class='container'>
             <h1>Submit an Order</h1>
             <form class='form'>
@@ -40,12 +40,12 @@
         <script id="socket commands">
         // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
-        var socket = io.connect('http://buttery-1-bkitano.c9users.io');
-        
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
         socket.on('connect', function(data) {
                 socket.emit('join', 'Hello World from buttery client');
             });
-            
+
         // when someone submits an order
         $('form').submit( function(e) {
             e.preventDefault();
@@ -53,7 +53,7 @@
             var order = $('#order').val();
             socket.emit('order-from-client', {'name':name, 'order':order});
         });
-        
+
         // when the server recieves an order, display it on the page
         socket.on('order-to-client', function(data) {
             var order = "<tr> <th scope='row'>"+ data.number +"</th> <td>" + data.name + "</td> <td>"+data.order+"</td></tr>";
