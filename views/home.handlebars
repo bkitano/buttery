@@ -1,4 +1,4 @@
-
+        <!-- orders list -->
         <div class='container'>
             <h1>Orders</h1>
             <table id='orders' class="table">
@@ -6,6 +6,7 @@
                 <tr>
                   <th>Name</th>
                   <th>Order</th>
+                  <th>Complete?</th>
                 </tr>
               </thead>
               <tbody id="order-list">
@@ -14,12 +15,18 @@
                         <tr>
                             <td>{{this.name}}</td>
                             <td>{{this.order}}</td>
+                            <td>
+                                <button class="btn btn-success complete">Complete</button>
+                            </td>
+                        </tr>                      
                         </tr>
+
                       {{/each}}
                   {{/if}}
               </tbody>
             </table>
         </div>
+        <!-- order form -->
 
         <div class='container'>
             <h1>Submit an Order</h1>
@@ -56,7 +63,18 @@
 
         // when the server recieves an order, display it on the page
         socket.on('order-to-client', function(data) {
-            var order = "<tr> <th scope='row'>"+ data.number +"</th> <td>" + data.name + "</td> <td>"+data.order+"</td></tr>";
+            var order = "<tr> <td>" + data.name + "</td> <td>"+data.order+"</td> <td> <button id='complete' class='btn btn-success'>Complete</button> </td> </tr>";
             $('#order-list').append(order);
+        });
+        </script>
+        <script id="complete button">
+            $(".complete").click( function() {
+                $(this).toggleClass('btn-danger');
+                if( $(this).text() === 'Complete' ) {
+                    $(this).text('Incomplete');
+                } else {
+                    $(this).text('Complete');
+                }
+            // use a web socket to alter the database data
         });
         </script>
