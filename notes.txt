@@ -1,0 +1,20 @@
+Things to include in the order
+- time/date
+- payment method
+    - venmo
+    - cash
+- status
+    - picked up
+    - ready for pick up
+    - cooking
+    - received
+- name
+- cost
+- email
+- phone number
+
+Mongo CLI
+mongo ds123182.mlab.com:23182/buttery -u brian -p buttery
+
+Mongo URI
+mongodb://<dbuser>:<dbpassword>@ds123182.mlab.com:23182/buttery
