@@ -10,7 +10,15 @@
                 </tr>
               </thead>
               <tbody id="order-list">
-
+                  {{#if old_orders}}
+                      {{#each old_orders}}
+                        <tr>
+                            <th scope='row'>{{this.number}}</th>
+                            <td>{{this.name}}</td>
+                            <td>{{this.order}}</td>
+                        </tr>                      
+                      {{/each}}
+                  {{/if}}
               </tbody>
             </table>
         </div>

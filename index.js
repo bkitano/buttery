@@ -30,7 +30,24 @@ MongoClient.connect(url, function(err, db) {
 // ------ SITES -----------
 
 app.get('/', function(req, res) {
-    res.render('home');    
+    
+    // get all the existing orders from the database
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err) {
+            console.log(err);
+        } else {
+            var collection = db.collection("orders");
+            collection.find({}).toArray(function(err, results) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.render('home', {old_orders: results});
+                }
+            });
+        }
+        db.close();
+    });
     //res.sendFile(__dirname + '/order.html');
 });
 
@@ -43,6 +60,10 @@ server.listen(process.env.PORT || port, function() {
 // ------ socket functions ------
 io.on('connection', function(client) {
     console.log('client connected');
+    
+    client.on('disconnect', function(data) {
+        console.log("client disconnected");
+    });
     
     client.on('join', function(data) {
         console.log(data);
@@ -87,4 +108,6 @@ io.on('connection', function(client) {
 - make sure to be on the correct versions of CLIs and things
 -- npm v 6 (update using nvm)
 -- mongodb v 3.2 (update instructions on google)
+- make sure you are following instructions
+-- putting handlebars material where it is supposed to go, not where it's easy
 */
