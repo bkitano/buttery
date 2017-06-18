@@ -1,0 +1,56 @@
+
+        <div class='container'>
+            <h1>Orders</h1>
+            <table id='orders' class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody id="order-list">
+
+              </tbody>
+            </table>
+        </div>
+        
+        <div class='container'>
+            <h1>Submit an Order</h1>
+            <form class='form'>
+                <div class='form-group' id="order-form">
+                        <label for="name">Your Name</label>
+                        <input class='form-control' type="text" id="name">
+                        </br>
+                        <label for="name">Order</label>
+                        <input class='form-control' type="text" id="order">
+                        </br>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script id="socket commands">
+        // if in beta, use "http://buttery-1-bkitano.c9users.io"
+        // to push to production, use "https://buttery.herokuapp.com"
+        var socket = io.connect('http://buttery-1-bkitano.c9users.io');
+        
+        socket.on('connect', function(data) {
+                socket.emit('join', 'Hello World from buttery client');
+            });
+            
+        // when someone submits an order
+        $('form').submit( function(e) {
+            e.preventDefault();
+            var name = $('#name').val();
+            var order = $('#order').val();
+            socket.emit('order-from-client', {'name':name, 'order':order});
+        });
+        
+        // when the server recieves an order, display it on the page
+        socket.on('order-to-client', function(data) {
+            var order = "<tr> <th scope='row'>"+ data.number +"</th> <td>" + data.name + "</td> <td>"+data.order+"</td></tr>";
+            $('#order-list').append(order);
+        });
+        </script>

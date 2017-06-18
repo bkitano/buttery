@@ -8,14 +8,19 @@ var port = 8080;
 var count = 0;
 var MongoClient = require("mongodb").MongoClient;
 var assert = require("assert");
+var exphbs = require("express-handlebars");
 
 // ------ MIDDLEWARE ------
-app.use(express.static(__dirname + '/node_modules')); 
+app.use(express.static(__dirname + '/node_modules'));
+
+// handlebars
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 // mongo middleware
 var url = 'mongodb://brian:buttery@ds123182.mlab.com:23182/buttery';
 
-// Use connect method to connect to the server
+// check to make sure the database is connected at the start
 MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected successfully to database");
@@ -25,7 +30,8 @@ MongoClient.connect(url, function(err, db) {
 // ------ SITES -----------
 
 app.get('/', function(req, res) {
-        res.sendFile(__dirname + '/order.html');
+    res.render('home');    
+    //res.sendFile(__dirname + '/order.html');
 });
 
 // ------ FOOTERS ---------
@@ -45,8 +51,8 @@ io.on('connection', function(client) {
     
     client.on('order-from-client', function(data) {
         count++;
-        var d = new Date();
         
+        var d = new Date();
         var order = {
             'date' : d.toJSON(),
             'number' : count,
@@ -78,4 +84,7 @@ io.on('connection', function(client) {
 // ------ NOTES ------
 /*
 - script tags go in the body tags
+- make sure to be on the correct versions of CLIs and things
+-- npm v 6 (update using nvm)
+-- mongodb v 3.2 (update instructions on google)
 */
