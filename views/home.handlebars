@@ -4,7 +4,6 @@
             <table id='orders' class="table">
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>Name</th>
                   <th>Order</th>
                 </tr>
@@ -13,7 +12,6 @@
                   {{#if old_orders}}
                       {{#each old_orders}}
                         <tr>
-                            <th scope='row'>{{this.number}}</th>
                             <td>{{this.name}}</td>
                             <td>{{this.order}}</td>
                         </tr>                      

@@ -18,3 +18,16 @@ mongo ds123182.mlab.com:23182/buttery -u brian -p buttery
 
 Mongo URI
 mongodb://<dbuser>:<dbpassword>@ds123182.mlab.com:23182/buttery
+
+6/17/17 - initial connects to the mlabs database are up and running, now time
+to render the client face so that you don't lose all of the open
+orders
+
+1. upon going to the 
+
+ha shit it now retains its orders
+nice
+
+6/18/17 - todo's
+1. need to order the numbers correctly
+2. need to be able to complete orders

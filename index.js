@@ -5,7 +5,6 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 var port = 8080;
-var count = 0;
 var MongoClient = require("mongodb").MongoClient;
 var assert = require("assert");
 var exphbs = require("express-handlebars");
@@ -47,6 +46,9 @@ app.get('/', function(req, res) {
             });
         }
         db.close();
+        
+        // IP tracking
+        console.log("new IP visiting: " + req.headers["x-forwarded-for"]);
     });
     //res.sendFile(__dirname + '/order.html');
 });
@@ -71,12 +73,10 @@ io.on('connection', function(client) {
     });
     
     client.on('order-from-client', function(data) {
-        count++;
         
         var d = new Date();
         var order = {
             'date' : d.toJSON(),
-            'number' : count,
             'name' : data.name,
             'order' : data.order
         };
