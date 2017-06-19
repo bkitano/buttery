@@ -45,7 +45,7 @@
         <script id="socket-commands">
         // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var socket = io.connect('https://buttery.herokuapp.com');
 
         socket.on('connect', function(data) {
                 socket.emit('join', 'Hello World from buttery client');
@@ -64,23 +64,10 @@
             var order = "<tr> <td>" + data.name + "</td> <td>"+data.order+"</td> <td> <button class='btn btn-success complete'>Complete</button> </td> </tr>";
             $('#order-list').append(order);
         });
+        
         </script>
         
-        <!--
-        <script id="complete-button">
-            $(".complete").click( function() {
-                $(this).toggleClass('btn-danger');
-                if( $(this).text() === 'Complete' ) {
-                    $(this).text('Incomplete');
-                } else {
-                    $(this).text('Complete');
-                }
-            // use a web socket to alter the database data
-        });
-        </script>
-        -->
-        
-        <script id='alternate-complete-button'>
+        <script id='complete-button'>
             $('#order-list').on('click', '.complete', function() {
                 $(this).toggleClass('btn-danger');
                 if( $(this).text() === 'Complete') {
@@ -88,5 +75,7 @@
                 } else {
                     $(this).text('Complete');
                 }
+                // work with a socket, haha yikes
+                socket.emit('order-marked-complete', {'msg':'order marked complete'});
             });
         </script>
