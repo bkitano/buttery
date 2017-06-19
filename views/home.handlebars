@@ -75,7 +75,7 @@
                 } else {
                     $(this).text('Complete');
                 }
-                // work with a socket, haha yikes
+                // work with a socket, haha yikes; need a serial function
                 socket.emit('order-marked-complete', {'msg':'order marked complete'});
             });
         </script>
