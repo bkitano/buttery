@@ -81,8 +81,8 @@ io.on('connection', function(client) {
             'order' : data.order
         };
         console.log(order);
+
         // add to mongo database
-        
         MongoClient.connect(url, function(err, db) {
             if(err) {
                 console.log(err);
@@ -110,4 +110,5 @@ io.on('connection', function(client) {
 -- mongodb v 3.2 (update instructions on google)
 - make sure you are following instructions
 -- putting handlebars material where it is supposed to go, not where it's easy
+- things in html shouldn't have the same id, but it's okay to have the same class
 */

@@ -31,3 +31,43 @@ nice
 6/18/17 - todo's
 1. need to order the numbers correctly
 2. need to be able to complete orders
+- the animation for that is done, and it's mobily responsive!
+okay, so dynamically loaded content doesn't work 
+exactly like you think it will
+https://stackoverflow.com/questions/17620211/jquery-events-not-working-on-ajax-loaded-content
+
+Thus, this:
+
+<script id="complete-button">
+            $(".complete").click( function() {
+                $(this).toggleClass('btn-danger');
+                if( $(this).text() === 'Complete' ) {
+                    $(this).text('Incomplete');
+                } else {
+                    $(this).text('Complete');
+                }
+            // use a web socket to alter the database data
+        });
+        </script>
+        
+will do the same thing as this:
+
+<script id='alternate-complete-button'>
+            $('#order-list').on('click', '.complete', function() {
+                $(this).toggleClass('btn-danger');
+                if( $(this).text() === 'Complete') {
+                    $(this).text('Incomplete');
+                } else {
+                    $(this).text('Complete');
+                }
+            });
+        </script>
+
+but the first script ('complete-button') won't work
+on the orders that you send in the current request; that is,
+it only works on the orders that you pull from the database.
+This is because in the first script, we bound that execution to 
+$(document).ready(), which meant it would only work on orders
+that were added when the script was rendered in the initial request,
+not the ones that were added. Instead, we used a 'delegate', which
+allows us to work events on things that haven't been created yet.
