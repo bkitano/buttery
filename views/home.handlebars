@@ -45,7 +45,7 @@
         <script id="socket-commands">
         // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
-        var socket = io.connect("https://buttery.herokuapp.com");
+        var socket = io.connect('http://buttery-1-bkitano.c9users.io');
 
         socket.on('connect', function(data) {
                 socket.emit('join', 'Hello World from buttery client');

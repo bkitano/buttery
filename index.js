@@ -76,6 +76,7 @@ io.on('connection', function(client) {
         
         var d = new Date();
         var order = {
+            'id' : Math.round(Math.random()*9e15).toString(36),
             'date' : d.toJSON(),
             'name' : data.name,
             'order' : data.order
