@@ -101,6 +101,9 @@ io.on('connection', function(client) {
        io.sockets.emit('order-to-client', order); 
     });
     
+    client.on('order-marked-complete', function(data) {
+        console.log(data);
+    })
 });
 
 // ------ NOTES ------

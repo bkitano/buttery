@@ -11,7 +11,7 @@
               <tbody id="order-list">
                   {{#if old_orders}}
                       {{#each old_orders}}
-                        <tr>
+                        <tr id={{this.id}}>
                             <td>{{this.name}}</td>
                             <td>{{this.order}}</td>
                             <td>
@@ -61,21 +61,25 @@
 
         // when the server recieves an order, display it on the page
         socket.on('order-to-client', function(data) {
-            var order = "<tr> <td>" + data.name + "</td> <td>"+data.order+"</td> <td> <button class='btn btn-success complete'>Complete</button> </td> </tr>";
+            var order = "<tr id=" + data.id + "> <td>" + data.name + "</td> <td>"+data.order+"</td> <td> <button class='btn btn-success complete'>Complete</button> </td> </tr>";
             $('#order-list').append(order);
         });
         
-        </script>
-        
-        <script id='complete-button'>
-            $('#order-list').on('click', '.complete', function() {
+        $('#order-list').on('click', '.complete', function() {
+            
+                var id = $(this).parent().parent().attr('id');
+                var complete = false;
+            
                 $(this).toggleClass('btn-danger');
                 if( $(this).text() === 'Complete') {
                     $(this).text('Incomplete');
                 } else {
                     $(this).text('Complete');
+                    complete = true;
                 }
                 // work with a socket, haha yikes; need a serial function
-                socket.emit('order-marked-complete', {'msg':'order marked complete'});
+                socket.emit('order-marked-complete', {'id': id, 'complete': complete});
             });
+            
         </script>
+        
