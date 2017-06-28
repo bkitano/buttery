@@ -79,7 +79,8 @@ io.on('connection', function(client) {
             'id' : Math.round(Math.random()*9e15).toString(36),
             'date' : d.toJSON(),
             'name' : data.name,
-            'order' : data.order
+            'order' : data.order,
+            'status' : 'received'
         };
         console.log(order);
 
@@ -102,8 +103,24 @@ io.on('connection', function(client) {
     });
     
     client.on('order-marked-complete', function(data) {
-        console.log(data);
-    })
+        
+        //console.log(data);
+        
+        // socket data
+        var id = data.id;
+        var status = data.status;
+
+        // change database entry if marked complete
+        MongoClient.connect(url, function(err, db) {
+            if(err) {
+                console.log(err);
+            } else {
+                var collection = db.collection('orders');
+                collection.findOneAndUpdate({'id': id}, {$set: {'status':'completed'}});
+            }
+            db.close();
+        });
+    });
 });
 
 // ------ NOTES ------

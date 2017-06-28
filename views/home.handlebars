@@ -67,18 +67,29 @@
         
         $('#order-list').on('click', '.complete', function() {
             
+                // this code is fun but useless.
+                // var id = $(this).parent().parent().attr('id');
+                // var complete = false;
+            
+                // $(this).toggleClass('btn-danger');
+                // if( $(this).text() === 'Complete') {
+                //     $(this).text('Incomplete');
+                // } else {
+                //     $(this).text('Complete');
+                //     complete = true;
+                // }
+                
                 var id = $(this).parent().parent().attr('id');
                 var complete = false;
-            
-                $(this).toggleClass('btn-danger');
-                if( $(this).text() === 'Complete') {
-                    $(this).text('Incomplete');
-                } else {
-                    $(this).text('Complete');
+                
+                // make it fade out
+                $(this).parent().parent().fadeOut('slow',function() {
                     complete = true;
-                }
-                // work with a socket, haha yikes; need a serial function
-                socket.emit('order-marked-complete', {'id': id, 'complete': complete});
+                })
+                
+                // make it reappear in a 'ready for pick up' section
+                
+                socket.emit('order-marked-complete', {'id': id, 'status': complete});
             });
             
         </script>
