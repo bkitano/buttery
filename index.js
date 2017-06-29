@@ -43,7 +43,7 @@ app.get('/', function(req, res) {
                 if(err) {
                     console.log(err);
                 } else {
-                    console.log(results);
+                    //console.log(results);
                     
                     var received_orders = [];
                     var completed_orders = [];
@@ -103,7 +103,7 @@ io.on('connection', function(client) {
             'order' : data.order,
             'status' : 'received'
         };
-        console.log(order);
+        //console.log(order);
 
         // add to mongo database
         MongoClient.connect(url, function(err, db) {
@@ -141,6 +141,23 @@ io.on('connection', function(client) {
             db.close();
         });
     }); // end of client.on('order-marked-complete')
+    
+    // when the client marks an order as picked-up
+    client.on('order-picked-up', function(data) {
+       var id = data.id;
+       
+       console.log(data);
+       
+       MongoClient.connect(url, function(err, db) {
+           if(err) {
+               console.log(err);
+           } else {
+               var collection = db.collection('orders');
+               collection.findOneAndUpdate({'id':id}, {$set: {'status':'picked-up'}});
+           }
+           db.close();
+       });
+    });
     
 }); // end of io.on
 

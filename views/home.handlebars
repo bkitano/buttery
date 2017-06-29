@@ -1,16 +1,16 @@
-        <!-- orders list -->
+        <!-- received orders list -->
         <div class='container'>
             <h1>Received Orders</h1>
-            <table id='orders' class="table">
+            <table id='received-orders' class="table">
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Order</th>
                 </tr>
               </thead>
-              <tbody id="order-list">
-                  {{#if old_orders}}
-                      {{#each old_orders}}
+              <tbody id="received-orders-list">
+                  {{#if received_orders}}
+                      {{#each received_orders}}
                         <tr id={{this.id}}>
                             <td>{{this.name}}</td>
                             <td>{{this.order}}</td>
@@ -25,6 +25,7 @@
             </table>
         </div>
         
+        <!-- completed orders list -->
         <div class='container'>
             <h1>Orders Ready for Pick Up</h1>
             <table id='completed-orders' class="table">
@@ -34,17 +35,16 @@
                   <th>Order</th>
                 </tr>
               </thead>
-              <tbody id="completed-order-list">
+              <tbody id="completed-orders-list">
                   {{#if completed_orders}}
                       {{#each completed_orders}}
                         <tr id={{this.id}}>
                             <td>{{this.name}}</td>
                             <td>{{this.order}}</td>
                             <td>
-                                <button class="btn btn-primary complete">Picked Up</button>
+                                <button class="btn btn-primary picked-up">Picked Up</button>
                             </td>
                         </tr>
-
                       {{/each}}
                   {{/if}}
               </tbody>
@@ -71,6 +71,7 @@
         <script id="socket-commands">
         // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
+        
         var socket = io.connect('http://buttery-1-bkitano.c9users.io');
 
         socket.on('connect', function(data) {
@@ -87,36 +88,32 @@
 
         // when the server recieves an order, display it on the page
         socket.on('order-to-client', function(data) {
-            var order = "<tr id=" + data.id + "> <td>" + data.name + "</td> <td>"+data.order+"</td> <td> <button class='btn btn-success complete'>Complete</button> </td> </tr>";
-            $('#order-list').append(order);
+            var $order = "<tr id=" + data.id + "> <td>" + data.name + "</td> <td>"+data.order+"</td> <td> <button class='btn btn-success complete'>Complete</button> </td> </tr>";
+            $('#received-orders').append($order);
         });
         
-        $('#order-list').on('click', '.complete', function() {
+        // when someone marks an order as complete
+        $('#received-orders').on('click', '.complete', function() {
+            var $order = $(this).parent().parent();
+            var id = $order.attr('id');
             
-                // this code is fun but useless.
-                // var id = $(this).parent().parent().attr('id');
-                // var complete = false;
+            // TODO
+            // can't be this simple, because you're also moving the button over, which you don't want
+            $order.find('button').attr('class', 'btn btn-primary picked-up');
+            $order.find('button').text('Picked Up');
+            $('#completed-orders-list').append($order);
             
-                // $(this).toggleClass('btn-danger');
-                // if( $(this).text() === 'Complete') {
-                //     $(this).text('Incomplete');
-                // } else {
-                //     $(this).text('Complete');
-                //     complete = true;
-                // }
-                
-                var id = $(this).parent().parent().attr('id');
-                var complete = false;
-                
-                // make it fade out
-                $(this).parent().parent().fadeOut('slow',function() {
-                    complete = true;
-                })
-                
-                // make it reappear in a 'ready for pick up' section
-                
-                socket.emit('order-marked-complete', {'id': id});
-            });
+            socket.emit('order-marked-complete', {'id': id});
+        });
+        
+        // when someone marks an order as picked-up
+        $('#completed-orders').on('click', '.picked-up', function() {
+            var $order = $(this).parent().parent();
+            var id = $order.attr('id');
+            $order.fadeOut('slow');
+            
+            socket.emit('order-picked-up', {'id':id});
+        });
             
         </script>
         
