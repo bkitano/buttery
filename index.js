@@ -170,4 +170,5 @@ io.on('connection', function(client) {
 - make sure you are following instructions
 -- putting handlebars material where it is supposed to go, not where it's easy
 - things in html shouldn't have the same id, but it's okay to have the same class
+- important to note the distinctions between form groups and form lists
 */

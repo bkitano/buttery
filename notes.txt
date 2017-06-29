@@ -86,3 +86,6 @@ updates the database when you click complete, and made the UI more make sensical
                 //     $(this).text('Complete');
                 //     complete = true;
                 // }
+                
+front end animations are working perfectly !!
+need to add a differentiated worker/customer view
