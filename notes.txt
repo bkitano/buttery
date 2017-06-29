@@ -73,3 +73,4 @@ not the ones that were added. Instead, we used a 'delegate', which
 allows us to work events on things that haven't been created yet.
 
 6/28/17
+updates the database when you click complete, and made the UI more make sensical

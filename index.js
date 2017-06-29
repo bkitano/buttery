@@ -30,18 +30,37 @@ MongoClient.connect(url, function(err, db) {
 
 app.get('/', function(req, res) {
     
-    // get all the existing orders from the database
-    
     MongoClient.connect(url, function(err, db) {
+        
+        // TODO
+        // needs to separate received orders from completed orders
+        
         if(err) {
             console.log(err);
         } else {
             var collection = db.collection("orders");
-            collection.find({}).toArray(function(err, results) {
+            collection.find().toArray(function(err, results) {
                 if(err) {
                     console.log(err);
                 } else {
-                    res.render('home', {old_orders: results});
+                    console.log(results);
+                    
+                    var received_orders = [];
+                    var completed_orders = [];
+                    
+                    // sort the results by completed and ready
+                    for(var i = 0; i < results.length; i++) {
+                        switch(results[i].status) {
+                            case 'received':
+                                received_orders.push(results[i]);
+                                break;
+                            case 'completed':
+                                completed_orders.push(results[i]);
+                                break;
+                        }
+                    }
+                    
+                    res.render('home', {received_orders: received_orders, completed_orders: completed_orders});
                 }
             });
         }
@@ -67,11 +86,13 @@ io.on('connection', function(client) {
         console.log("client disconnected");
     });
     
+    // when the client comes onto the server
     client.on('join', function(data) {
         console.log(data);
         client.emit('messages', 'Hello from server');
     });
     
+    // when the server receives an order from the client
     client.on('order-from-client', function(data) {
         
         var d = new Date();
@@ -102,15 +123,14 @@ io.on('connection', function(client) {
        io.sockets.emit('order-to-client', order); 
     });
     
+    // when the client marks the order complete
     client.on('order-marked-complete', function(data) {
-        
         //console.log(data);
         
         // socket data
         var id = data.id;
-        var status = data.status;
 
-        // change database entry if marked complete
+        // change database entry status to completed if marked complete
         MongoClient.connect(url, function(err, db) {
             if(err) {
                 console.log(err);
@@ -120,8 +140,9 @@ io.on('connection', function(client) {
             }
             db.close();
         });
-    });
-});
+    }); // end of client.on('order-marked-complete')
+    
+}); // end of io.on
 
 // ------ NOTES ------
 /*
