@@ -11,6 +11,7 @@ var exphbs = require("express-handlebars");
 
 // ------ MIDDLEWARE ------
 app.use(express.static(__dirname + '/node_modules'));
+app.use('/assets', express.static(__dirname + '/assets'));
 
 // handlebars
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -149,19 +150,20 @@ io.on('connection', function(client) {
     
     // when the client marks an order as picked-up
     client.on('order-picked-up', function(data) {
-       var id = data.id;
-       
-       console.log(data);
+        var order = data.order;
+       console.log(order);
        
        MongoClient.connect(url, function(err, db) {
            if(err) {
                console.log(err);
            } else {
                var collection = db.collection('orders');
-               collection.findOneAndUpdate({'id':id}, {$set: {'status':'picked-up'}});
+               collection.findOneAndUpdate({'id':order.id}, {$set: {'status':'picked-up'}});
            }
            db.close();
        });
+       
+       io.sockets.emit('picked-up-to-clients', {'order':order});
     });
     
 }); // end of io.on
