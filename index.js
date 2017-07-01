@@ -92,7 +92,7 @@ io.on('connection', function(client) {
         client.emit('messages', 'Hello from server');
     });
     
-    // when the server receives an order from the client
+    // 1a-s. when the server receives an order from the client
     client.on('order-from-client', function(data) {
         
         var d = new Date();
@@ -119,16 +119,17 @@ io.on('connection', function(client) {
             }
             db.close();
         });
-
+    
+    // 1b-s. send the data to the client
        io.sockets.emit('order-to-client', order); 
     });
     
     // when the client marks the order complete
     client.on('order-marked-complete', function(data) {
-        //console.log(data);
+        console.log(data);
         
         // socket data
-        var id = data.id;
+        var order = data.order;
 
         // change database entry status to completed if marked complete
         MongoClient.connect(url, function(err, db) {
@@ -136,10 +137,14 @@ io.on('connection', function(client) {
                 console.log(err);
             } else {
                 var collection = db.collection('orders');
-                collection.findOneAndUpdate({'id': id}, {$set: {'status':'completed'}});
+                collection.findOneAndUpdate({'id': order.id}, {$set: {'status':'completed'}});
             }
             db.close();
         });
+        
+        // 2b-s
+        io.sockets.emit('marked-complete-to-clients', {'order': data.order});
+        
     }); // end of client.on('order-marked-complete')
     
     // when the client marks an order as picked-up
