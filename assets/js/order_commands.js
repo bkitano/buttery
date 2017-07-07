@@ -14,7 +14,7 @@
             e.preventDefault();
             var name = $('#name').val();
             var order = $('#order').val();
-            socket.emit('order-from-client', {'name':name, 'order':order});
+            socket.emit('order-from-client', {'name':name, 'order':order, 'college': window.location.pathname});
         });
 
         // 1a-c. when the server recieves an order, client animation
