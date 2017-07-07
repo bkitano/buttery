@@ -1,10 +1,5 @@
 // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
-
-        // the asset is loading !!
-        $(document).ready(function() {
-          $('body').css('background-color','yellow'); 
-        });
         
         var socket = io.connect('https://buttery-1-bkitano.c9users.io/');
         // var socket = io.connect('https://buttery.herokuapp.com');
