@@ -1,3 +1,14 @@
+/*
+- script tags go in the body tags
+- make sure to be on the correct versions of CLIs and things
+-- npm v 6 (update using nvm)
+-- mongodb v 3.2 (update instructions on google)
+- make sure you are following instructions
+-- putting handlebars material where it is supposed to go, not where it's easy
+- things in html shouldn't have the same id, but it's okay to have the same class
+- important to note the distinctions between form groups and form lists
+*/
+
 Things to include in the order
 - time/date
 - payment method
@@ -88,3 +99,43 @@ updates the database when you click complete, and made the UI more make sensical
                 // }
                 
 need to do wide updating for pick up
+
+okay the updating structure:
+1. (works) customer submits order (client dependent animation)
+1a. client to server, client animation
+1b. server broadcasts
+
+2. worker marks as complete (server dependent animation)
+2a. client to server
+2b. server broadcasts to all clients
+2c. client jquery animation
+
+3. worker marks as picked up (server dependent animation)
+3a. client to server
+3b. server broadcasts to all clients
+3c. client animation
+
+7/2/17
+^k all that shit is working, let's check out
+the facebook login integration.
+
+https://www.youtube.com/watch?v=x_gLILTRD_k&t=3s
+https://developers.facebook.com/docs/facebook-login/web
+
+7/3/17
+First thing's first tho, we need to specify the buttery first.
+
+Alright how do i want to do this
+I could do it like
+
+- each buttery gets its own separate site, 
+which makes sense because you know different menus and order panes
+
+Steps:
+1. make one for each buttery, having it send to each site
+-- merp
+
+alright we'll start with morse and stiles. i think all i have to do
+is change the socket locations.
+
+Alright we are switching over to mongojs. Just kidding not helpful yet.

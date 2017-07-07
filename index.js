@@ -10,8 +10,17 @@ var assert = require("assert");
 var exphbs = require("express-handlebars");
 
 // ------ MIDDLEWARE ------
-app.use(express.static(__dirname + '/node_modules'));
+
+// loading the socket scripts NOT WORKING
+app.use('/modules', express.static(__dirname + '/node_modules'));
+app.use('/:id/modules', express.static(__dirname + '/node_modules'));
+app.use('/:id/horsdouvre/modules', express.static(__dirname + '/node_modules'));
+
+// loading the command scripts
+app.use('/:id/horsdouvre/assets', express.static(__dirname + '/assets'));
+app.use('/:id/assets', express.static(__dirname + '/assets'));
 app.use('/assets', express.static(__dirname + '/assets'));
+
 
 // handlebars
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -27,9 +36,80 @@ MongoClient.connect(url, function(err, db) {
   db.close();
 });
 
+// ----- FUNCTIONS -------
+
+// add to mongo database
+// need to add it to the correct collection (by college)
+
+function addOrderToCollection(url, order, collection_name) {
+    MongoClient.connect(url, function(err, db) {
+        if(err) {
+            console.log(err);
+        } else {
+            var collection = db.collection(collection_name);
+            collection.insertOne(order, function(err, result) {
+                if(err){
+                    console.log(err);
+                }
+            });
+        }
+        db.close();
+    });    
+}
+
 // ------ SITES -----------
 
+// selecting your buttery
 app.get('/', function(req, res) {
+    res.render('slash');
+});
+
+// customer views
+app.get('/:id', function(req, res) {
+    console.log(req.params.id);
+    MongoClient.connect(url, function(err, db) {
+        
+        // TODO
+        // needs to separate received orders from completed orders
+        
+        if(err) {
+            console.log(err);
+        } else {
+            var collection = db.collection("orders");
+            collection.find().toArray(function(err, results) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    //console.log(results);
+                    
+                    var received_orders = [];
+                    var completed_orders = [];
+                    
+                    // sort the results by completed and ready
+                    for(var i = 0; i < results.length; i++) {
+                        switch(results[i].status) {
+                            case 'received':
+                                received_orders.push(results[i]);
+                                break;
+                            case 'completed':
+                                completed_orders.push(results[i]);
+                                break;
+                        }
+                    }
+                    
+                    res.render('order', {received_orders: received_orders, completed_orders: completed_orders});
+                }
+            });
+        }
+        db.close();
+        
+        // IP tracking
+        console.log("new IP visiting: " + req.headers["x-forwarded-for"]);
+    });
+});
+
+// buttery worker views
+app.get('/:id/horsdouvre', function(req, res) {
     
     MongoClient.connect(url, function(err, db) {
         
@@ -61,7 +141,7 @@ app.get('/', function(req, res) {
                         }
                     }
                     
-                    res.render('home', {received_orders: received_orders, completed_orders: completed_orders});
+                    res.render('worker', {received_orders: received_orders, completed_orders: completed_orders});
                 }
             });
         }
@@ -70,7 +150,7 @@ app.get('/', function(req, res) {
         // IP tracking
         console.log("new IP visiting: " + req.headers["x-forwarded-for"]);
     });
-    //res.sendFile(__dirname + '/order.html');
+
 });
 
 // ------ FOOTERS ---------
@@ -95,6 +175,7 @@ io.on('connection', function(client) {
     
     // 1a-s. when the server receives an order from the client
     client.on('order-from-client', function(data) {
+        console.log('order received');
         
         var d = new Date();
         var order = {
@@ -105,21 +186,9 @@ io.on('connection', function(client) {
             'status' : 'received'
         };
         //console.log(order);
-
-        // add to mongo database
-        MongoClient.connect(url, function(err, db) {
-            if(err) {
-                console.log(err);
-            } else {
-                var collection = db.collection("orders");
-                collection.insertOne(order, function(err, result) {
-                    if(err){
-                        console.log(err);
-                    }
-                });
-            }
-            db.close();
-        });
+        
+        addOrderToCollection(url, order, 'orders');
+        
     
     // 1b-s. send the data to the client
        io.sockets.emit('order-to-client', order); 
@@ -178,4 +247,6 @@ io.on('connection', function(client) {
 -- putting handlebars material where it is supposed to go, not where it's easy
 - things in html shouldn't have the same id, but it's okay to have the same class
 - important to note the distinctions between form groups and form lists
+- script tags go at the bottom, not the top. fuckin a
+- loading assets using express.static is tricky. make sure that both sides are checked
 */

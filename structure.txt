@@ -1,0 +1,83 @@
+college: the name of the collection for each college
+
+
+function getOrderInfoByButtery(collection_name) {    
+    MongoClient.connect(url, function(err, db) {
+            
+            // TODO
+            // needs to separate received orders from completed orders
+            
+            if(err) {
+                console.log(err);
+            } else {
+                var collection = db.collection(collection_name);
+                collection.find().toArray(function(err, results) {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        //console.log(results);
+                        
+                        var received_orders = [];
+                        var completed_orders = [];
+                        
+                        // sort the results by completed and ready
+                        for(var i = 0; i < results.length; i++) {
+                            switch(results[i].status) {
+                                case 'received':
+                                    received_orders.push(results[i]);
+                                    break;
+                                case 'completed':
+                                    completed_orders.push(results[i]);
+                                    break;
+                            }
+                        }
+                        
+                        res.render(college, {received_orders: received_orders, completed_orders: completed_orders});
+                    }
+                });
+            }
+            db.close();
+        });
+    }
+    
+    
+// a new thing
+
+function getOrdersOnStartup(url, collection) {
+
+    var received_orders = [];
+    var completed_orders = [];
+
+    MongoClient.connect(url, function(err, db) {
+        
+        // TODO
+        // needs to separate received orders from completed orders
+        
+        if(err) {
+            console.log(err);
+        } else {
+            var collection = db.collection("orders");
+            collection.find().toArray(function(err, results) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    //console.log(results);
+                    
+                    // sort the results by completed and ready
+                    for(var i = 0; i < results.length; i++) {
+                        switch(results[i].status) {
+                            case 'received':
+                                received_orders.push(results[i]);
+                                break;
+                            case 'completed':
+                                completed_orders.push(results[i]);
+                                break;
+                        }
+                    }
+                } // end of else
+            } // end of collection.find()
+        } // end of else
+    } // end of MongoClient.connect()
+    
+    return [ received_orders, completed_orders];
+} // end of function

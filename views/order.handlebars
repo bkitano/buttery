@@ -1,0 +1,63 @@
+        <!-- received orders list -->
+        <div class='container'>
+            <h1>Received Orders</h1>
+            <table id='received-orders' class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody id="received-orders-list">
+                  {{#if received_orders}}
+                      {{#each received_orders}}
+                        <tr id={{this.id}}>
+                            <td class='name'>{{this.name}}</td>
+                            <td class='items'>{{this.order}}</td>
+                        </tr>
+
+                      {{/each}}
+                  {{/if}}
+              </tbody>
+            </table>
+        </div>
+        
+        <!-- completed orders list -->
+        <div class='container'>
+            <h1>Orders Ready for Pick Up</h1>
+            <table id='completed-orders' class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody id="completed-orders-list">
+                  {{#if completed_orders}}
+                      {{#each completed_orders}}
+                        <tr id={{this.id}}>
+                            <td class='name'>{{this.name}}</td>
+                            <td class='items'>{{this.order}}</td>
+                        </tr>
+                      {{/each}}
+                  {{/if}}
+              </tbody>
+            </table>
+        </div>
+        
+        <!-- order form -->
+        <div class='container'>
+            <h1>Submit an Order</h1>
+            <form class='form'>
+                <div class='form-group' id="order-form">
+                        <label for="name">Your Name</label>
+                        <input class='form-control' type="text" id="name">
+                        </br>
+                        <label for="name">Order</label>
+                        <input class='form-control' type="text" id="order">
+                        </br>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+        
