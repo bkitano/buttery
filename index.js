@@ -65,8 +65,7 @@ app.get('/', function(req, res) {
 });
 
 // customer views
-app.get('/:id', function(req, res) {
-    console.log(req.params.id);
+app.get('/:college', function(req, res) {
     MongoClient.connect(url, function(err, db) {
         
         // TODO
@@ -75,7 +74,7 @@ app.get('/:id', function(req, res) {
         if(err) {
             console.log(err);
         } else {
-            var collection = db.collection("orders");
+            var collection = db.collection(req.params.college);
             collection.find().toArray(function(err, results) {
                 if(err) {
                     console.log(err);
@@ -97,7 +96,7 @@ app.get('/:id', function(req, res) {
                         }
                     }
                     
-                    res.render('order', {received_orders: received_orders, completed_orders: completed_orders});
+                    res.render('order', {college: req.params.id, received_orders: received_orders, completed_orders: completed_orders});
                 }
             });
         }
@@ -109,7 +108,7 @@ app.get('/:id', function(req, res) {
 });
 
 // buttery worker views
-app.get('/:id/horsdouvre', function(req, res) {
+app.get('/:college/horsdouvre', function(req, res) {
     
     MongoClient.connect(url, function(err, db) {
         
@@ -119,7 +118,7 @@ app.get('/:id/horsdouvre', function(req, res) {
         if(err) {
             console.log(err);
         } else {
-            var collection = db.collection("orders");
+            var collection = db.collection(req.params.college);
             collection.find().toArray(function(err, results) {
                 if(err) {
                     console.log(err);
@@ -176,7 +175,8 @@ io.on('connection', function(client) {
     // 1a-s. when the server receives an order from the client
     client.on('order-from-client', function(data) {
         console.log('order received');
-        
+        var college = data.college.split('/')[1];
+
         var d = new Date();
         var order = {
             'id' : Math.round(Math.random()*9e15).toString(36),
@@ -187,7 +187,7 @@ io.on('connection', function(client) {
         };
         //console.log(order);
         
-        addOrderToCollection(url, order, 'orders');
+        addOrderToCollection(url, order, college);
         
     
     // 1b-s. send the data to the client
