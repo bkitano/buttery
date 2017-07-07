@@ -1,8 +1,8 @@
 // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
         
-        var socket = io.connect('https://buttery-1-bkitano.c9users.io/');
-        // var socket = io.connect('https://buttery.herokuapp.com');
+        // var socket = io.connect('https://buttery-1-bkitano.c9users.io/');
+        var socket = io.connect('https://buttery.herokuapp.com');
 
         socket.on('connect', function(data) {
                 socket.emit('join', 'Hello World from buttery client');
