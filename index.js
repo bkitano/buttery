@@ -11,11 +11,6 @@ var exphbs = require("express-handlebars");
 
 // ------ MIDDLEWARE ------
 
-// loading the socket scripts NOT WORKING
-app.use('/modules', express.static(__dirname + '/node_modules'));
-app.use('/:id/modules', express.static(__dirname + '/node_modules'));
-app.use('/:id/horsdouvre/modules', express.static(__dirname + '/node_modules'));
-
 // loading the command scripts
 app.use('/:id/horsdouvre/assets', express.static(__dirname + '/assets'));
 app.use('/:id/assets', express.static(__dirname + '/assets'));
@@ -108,7 +103,7 @@ app.get('/:college', function(req, res) {
 });
 
 // buttery worker views
-app.get('/:college/horsdouvre', function(req, res) {
+app.get('/:college/horsdoeuvre', function(req, res) {
     
     MongoClient.connect(url, function(err, db) {
         
