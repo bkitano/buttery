@@ -5,7 +5,7 @@
         // var socket = io.connect('https://buttery.herokuapp.com');
         var socket = io.connect(window.location.origin);
         
-        var college = window.location.pathname;
+        var college = window.location.pathname.split('/')[1];
         
         socket.on('connect', function(data) {
                 socket.emit('join', 'Hello World from buttery client');
