@@ -12,7 +12,7 @@ var exphbs = require("express-handlebars");
 // ------ MIDDLEWARE ------
 
 // loading the command scripts
-app.use('/:id/horsdouvre/assets', express.static(__dirname + '/assets'));
+app.use('/:id/horsdoeuvre/assets', express.static(__dirname + '/assets'));
 app.use('/:id/assets', express.static(__dirname + '/assets'));
 app.use('/assets', express.static(__dirname + '/assets'));
 
@@ -170,7 +170,7 @@ io.on('connection', function(client) {
     // 1a-s. when the server receives an order from the client
     client.on('order-from-client', function(data) {
         console.log('order received');
-        var college = data.college.split('/')[1];
+        var college = data.college;
 
         var d = new Date();
         var order = {
@@ -195,13 +195,14 @@ io.on('connection', function(client) {
         
         // socket data
         var order = data.order;
+        var college = data.college;
 
         // change database entry status to completed if marked complete
         MongoClient.connect(url, function(err, db) {
             if(err) {
                 console.log(err);
             } else {
-                var collection = db.collection('orders');
+                var collection = db.collection(college);
                 collection.findOneAndUpdate({'id': order.id}, {$set: {'status':'completed'}});
             }
             db.close();
@@ -215,13 +216,13 @@ io.on('connection', function(client) {
     // when the client marks an order as picked-up
     client.on('order-picked-up', function(data) {
         var order = data.order;
-       console.log(order);
+        var college = data.college;
        
        MongoClient.connect(url, function(err, db) {
            if(err) {
                console.log(err);
            } else {
-               var collection = db.collection('orders');
+               var collection = db.collection(college);
                collection.findOneAndUpdate({'id':order.id}, {$set: {'status':'picked-up'}});
            }
            db.close();

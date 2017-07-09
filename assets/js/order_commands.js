@@ -1,9 +1,11 @@
 // if in beta, use "http://buttery-1-bkitano.c9users.io"
         // to push to production, use "https://buttery.herokuapp.com"
         
-        // var socket = io.connect('https://buttery-1-bkitano.c9users.io/');
-        var socket = io.connect('https://buttery.herokuapp.com');
-
+        var socket = io.connect('https://buttery-1-bkitano.c9users.io/');
+        // var socket = io.connect('https://buttery.herokuapp.com');
+        
+        var college = window.location.pathname;
+        
         socket.on('connect', function(data) {
                 socket.emit('join', 'Hello World from buttery client');
             });
@@ -13,7 +15,7 @@
             e.preventDefault();
             var name = $('#name').val();
             var order = $('#order').val();
-            socket.emit('order-from-client', {'name':name, 'order':order, 'college': window.location.pathname});
+            socket.emit('order-from-client', {'name':name, 'order':order, 'college': college});
         });
 
         // 1a-c. when the server recieves an order, client animation
@@ -37,7 +39,7 @@
             // $('#completed-orders-list').append($order);
             
             // 2a-c
-            socket.emit('order-marked-complete', {'order': order});
+            socket.emit('order-marked-complete', {'order': order, 'college': college});
         });
         
         // 2b-c. when the server tells the client the order was marked complete
@@ -60,7 +62,7 @@
                 'items': $order.find('.items').text()
             };
 
-            socket.emit('order-picked-up', {'order':order});
+            socket.emit('order-picked-up', {'order':order, 'college':college});
         });
         
         // distributing the picked-up notification
