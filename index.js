@@ -91,7 +91,7 @@ app.get('/:college', function(req, res) {
                         }
                     }
                     
-                    res.render('order', {college: req.params.id, received_orders: received_orders, completed_orders: completed_orders});
+                    res.render('order', {college: req.params.college, received_orders: received_orders, completed_orders: completed_orders});
                 }
             });
         }
@@ -245,4 +245,5 @@ io.on('connection', function(client) {
 - important to note the distinctions between form groups and form lists
 - script tags go at the bottom, not the top. fuckin a
 - loading assets using express.static is tricky. make sure that both sides are checked
+- make sure to switch between dev and product correctly
 */
