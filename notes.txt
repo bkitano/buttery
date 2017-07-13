@@ -139,3 +139,6 @@ alright we'll start with morse and stiles. i think all i have to do
 is change the socket locations.
 
 Alright we are switching over to mongojs. Just kidding not helpful yet.
+
+need to switch get to post requests
+

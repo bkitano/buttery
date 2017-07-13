@@ -135,7 +135,7 @@ app.get('/:college/horsdoeuvre', function(req, res) {
                         }
                     }
                     
-                    res.render('worker', {received_orders: received_orders, completed_orders: completed_orders});
+                    res.render('worker', {'college': req.params.college, received_orders: received_orders, completed_orders: completed_orders});
                 }
             });
         }
